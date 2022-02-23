@@ -62,10 +62,13 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-       Customer customer = petService.find(petId).getCustomer();
-//        Customer customer = customerService.findByPet(petId);
+     //  Customer customer = petService.find(petId).getCustomer();
+        Pet pet = petService.getPetById(petId);
+        Long ownerId = pet.getCustomer().getId();
+        Customer customer = customerService.getCustomerById(ownerId);
+       //Customer customer = customerService.findByPet(petId);
        CustomerDTO cd =  convertEntityToDto(customer);
-       cd.setPetIds(getPetIds(customer));
+
        return cd;
     }
 
@@ -119,6 +122,30 @@ public class UserController {
     private static Customer convertDtoToEntity(CustomerDTO customerDTO) {
        return new ConvertEntity<Customer, CustomerDTO>()
                .toEntity(new Customer(), customerDTO);
+    }
+
+    private CustomerDTO convertCustomerToCustomerDTO(Customer customer){
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setId(customer.getId());
+        customerDTO.setName(customer.getName());
+        customerDTO.setPhoneNumber(customer.getPhoneNumber());
+        customerDTO.setNotes(customer.getNotes());
+
+        List<Long> petIds = new ArrayList<>();
+
+        if (!customer.getPets().isEmpty()) {
+            petIds = customer.getPets().stream().map(Pet::getId).collect(Collectors.toList());
+        }
+        customerDTO.setPetIds(petIds);
+        return customerDTO;
+    }
+    private Customer convertCustomerDTOToCustomer(CustomerDTO customerDTO){
+        Customer customer = new Customer();
+        customer.setName(customerDTO.getName());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber());
+        customer.setNotes(customerDTO.getNotes());
+
+        return customer;
     }
 
 }

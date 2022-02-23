@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DatasourceConfig {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/critter?serverTimezone=UTC";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/critter?createDatabaseIfNotExist=true";
 
     @Bean
 //    @Primary taking away primary to prevent this config from always been loaded

@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -40,6 +41,8 @@ public class CustomerService {
                 }).orElseThrow(UnsupportedOperationException::new); //todo custom exception
     }
 
+
+
     public Customer addPet(Pet pet, Long customerId) {
         return customerRepository.findById(customerId).map( c -> {
 //            c.getPets().add(pet);
@@ -61,4 +64,20 @@ public class CustomerService {
             return customer;
         }).orElseThrow(UnsupportedOperationException::new);//todo custom exception
     }
+
+    public Customer getCustomerById(Long customerId) {
+        Optional<Customer> customer = customerRepository.findById(customerId);
+
+        if(customer.isPresent()) {
+            return customer.get();
+        } else {
+            return null;
+        }
+
+
 }
+
+
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }}
