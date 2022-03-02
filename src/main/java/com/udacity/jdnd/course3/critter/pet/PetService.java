@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Transactional
@@ -41,7 +42,19 @@ public class PetService {
     }
 
     public Pet savePet(Pet pet) {
-        return petRepository.save(pet);
+        Pet petSaved = petRepository.save(pet);
+        Customer customer  = petSaved.getCustomer();
+
+        if(!Objects.isNull(customer)){
+            customer.getPets().add(petSaved);
+            customerRepository.save(customer);
+
+
+        }
+
+        return petSaved;
+
+
     }
 
     public List<Pet> getAllPetsByOwnerId(long ownerId) {

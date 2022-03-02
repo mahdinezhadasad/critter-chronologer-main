@@ -123,13 +123,18 @@ public class CritterFunctionalTest {
         CustomerDTO newCustomer = userController.saveCustomer(customerDTO);
 
         PetDTO petDTO = createPetDTO();
-        System.out.println("Pet DTO:- " + petDTO.toString());
         petDTO.setOwnerId(newCustomer.getId());
         PetDTO newPet = petController.savePet(petDTO);
 
         CustomerDTO owner = userController.getOwnerByPet(newPet.getId());
         Assertions.assertEquals(owner.getId(), newCustomer.getId());
         Assertions.assertEquals(owner.getPetIds().get(0), newPet.getId());
+
+       // CustomerDTO owner = userController.getOwnerByPet(newPet.getId());
+      //  Assertions.assertEquals(owner.getId(), newCustomer.getId());
+        //PetDTO ownPetDTO = petController.getPetsByOwner(newCustomer.getId()).get(0);
+
+        //Assertions.assertEquals(ownPetDTO.getId(), newPet.getId());
     }
 
     @Test

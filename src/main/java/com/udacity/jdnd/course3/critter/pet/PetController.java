@@ -4,6 +4,7 @@ import com.udacity.jdnd.course3.critter.user.customer.Customer;
 import com.udacity.jdnd.course3.critter.user.customer.CustomerDTO;
 import com.udacity.jdnd.course3.critter.user.customer.CustomerService;
 import com.udacity.jdnd.course3.critter.util.ConvertEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +26,18 @@ public class PetController {
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        Pet pet = convertPetDTOToPet(petDTO);
-        Pet petSaved = petService.savePet(pet);
-
-        if(petDTO.getOwnerId() != 0) {
-            Customer customer = customerService.getCustomerById(petDTO.getOwnerId());
-            customer.getPets().add(petSaved);
-            customerService.save(customer);
+        Customer customer = null;
+        if ((Long) petDTO.getOwnerId() != null) {
+            customer = customerService.getCustomerById(petDTO.getOwnerId());
         }
 
-        petDTO.setId(petSaved.getId());
+        Pet pet = convertPetDTOToPet(petDTO);
+
+        pet.setCustomer(customer);
+
+        pet = petService.savePet(pet);
+        petDTO.setId(pet.getId());
+
         return petDTO;
     }
 

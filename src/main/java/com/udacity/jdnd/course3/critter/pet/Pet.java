@@ -16,7 +16,7 @@ public class Pet {
     private String name;
     private PetType type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 //    @JoinColumn(name = "customer_id")
     private Customer customer;
 
